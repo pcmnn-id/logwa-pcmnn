@@ -8,9 +8,10 @@ const mime = require('mime-types');
 const fs = require('fs');
 //TELEGRAM PART
 const TelegramBot = require('node-telegram-bot-api');
-const token = 'your_telegram_token';
+const conf = require('./config')
+const token = conf.token
 const bot = new TelegramBot(token, {polling: true});
-const chatId = 12346789;
+const chatId = conf.chatId
 
 create({
 	qrLogSkip: false,
@@ -83,15 +84,28 @@ async function start(client) {
     })
 
     client.onAnyMessage(async message => {
-      if(message.type === 'chat' && message.fromMe === true){
+      // console.log(message)
+      if(message.type === 'chat' && message.fromMe === true && message.isGroupMsg === false){
         const chatLog = `[ChatLog-Out] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} -> (+${message.to.replace("@c.us", "")}) ${message.chat.contact.pushname} : "${message.body}" `
         const teleLog = `[ChatLog-Out] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} -> (+${message.to.replace("@c.us", "")}) ${message.chat.contact.pushname} : \n"${message.body}" `
         console.log(chatLog);
         bot.sendMessage(chatId, teleLog);
       }
-      if(message.type === 'chat' && message.fromMe === false){
+      if(message.type === 'chat' && message.fromMe === false && message.isGroupMsg === false){
         const chatLog = `[ChatLog-In] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} : "${message.body}" `
         const teleLog = `[ChatLog-In] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} : \n"${message.body}" `
+        console.log(chatLog);
+        bot.sendMessage(chatId, teleLog)
+      }
+      if(message.type === 'chat' && message.fromMe === false && message.isGroupMsg === true){
+        const chatLog = `[ChatLog-In] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} -> ${message.chat.formattedTitle} : "${message.body}" `
+        const teleLog = `[ChatLog-In] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} -> ${message.chat.formattedTitle} : \n"${message.body}" `
+        console.log(chatLog);
+        bot.sendMessage(chatId, teleLog)
+      }
+      if(message.type === 'chat' && message.fromMe === true && message.isGroupMsg === true){
+        const chatLog = `[ChatLog-Out] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} -> ${message.chat.formattedTitle} : "${message.body}" `
+        const teleLog = `[ChatLog-Out] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} -> ${message.chat.formattedTitle} : \n"${message.body}" `
         console.log(chatLog);
         bot.sendMessage(chatId, teleLog)
       }
