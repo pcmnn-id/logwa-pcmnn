@@ -115,36 +115,11 @@ async function start(client) {
     //CHAT THINGS
     client.onAnyMessage(async message => {
       // console.log(message)
-      const jam = moment().format("DD/MM/YY hh:mm:ss")
-      const tipe = message.type
-      const dariAku = message.fromMe
-      const dariGrup = message.isGroup
-      const pengirim = message.sender.name
-      const nomorPengirim = message.sender.id.replace("@c.us", "")
-      const nomorPenerima = message.to.replace("@c.us", "")
-      const namaAsliFrom = message.sender.pushname      // Chat In
-      const judulChat = message.chat.formattedTitle
-      const namaAsliTo = message.chat.contact.pushname  //Chat Out
-      const namaKontak = message.chat.contact.name      // Chat Out
-      const pesan = message.body
-
-      function logTele(){
-        console.log
-      }
       //CHAT IN PERSONAL
-      if(tipe === 'chat' && dariAku === false && dariGrup === false){
-        console.log('')
-      }
       if(message.type === 'chat' && message.fromMe === false && message.isGroupMsg === false){
         if(message.sender.name === undefined){
           const chatLog = `${chalk.green("[ChatLog-In]")} ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} -> ${message.chat.formattedTitle} | Not Contact | : "${message.body}" `
-          const teleLog = 
-          `
-          [ChatLog-In] ${moment().format("DD/MM/YY hh:mm:ss")}
-          from (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname}
-          to ${message.chat.formattedTitle} | Not Contact |
-          "${message.body}" 
-          `
+          const teleLog = `[ChatLog-In] ${moment().format("DD/MM/YY hh:mm:ss")} (+${message.sender.id.replace("@c.us", "")}) ${message.sender.pushname} ${message.chat.formattedTitle} | Not Contact | \n"${message.body}" `
           console.log(chatLog);
           bot.sendMessage(chatId, teleLog)
         }
